@@ -520,6 +520,18 @@ namespace Assimp
         }
 
         /// <summary>
+        /// Performs matrix-vector multiplication identical to the way Assimp does it.
+        /// </summary>
+        /// <param name="v">Vector to transform</param>
+        /// <returns>Transformed vector</returns>
+        public Vector3 Transform(Vector3 v) =>
+            new(
+                A1 * v.X + A2 * v.Y + A3 * v.Z,
+                B1 * v.X + B2 * v.Y + B3 * v.Z,
+                C1 * v.X + C2 * v.Y + C3 * v.Z
+            );
+
+        /// <summary>
         /// Performs matrix multiplication.Multiplication order is B x A. That way, SRT concatenations
         /// are left to right.
         /// </summary>
