@@ -103,7 +103,9 @@ namespace Assimp.Unmanaged
 
             Functions.aiImportFileExWithProperties func = GetFunction<Functions.aiImportFileExWithProperties>(FunctionNames.aiImportFileExWithProperties);
 
-            return func(file, (uint) flags, fileIO, propStore);
+            var scenePtr = func(file, (uint) flags, fileIO, propStore);
+            FixQuaternionsInSceneFromAssimp(scenePtr);
+            return scenePtr;
         }
 
         /// <summary>
@@ -123,7 +125,9 @@ namespace Assimp.Unmanaged
 
             byte[] buffer = MemoryHelper.ReadStreamFully(stream, 0);
 
-            return func(buffer, (uint) buffer.Length, (uint) flags, formatHint, propStore);
+            var scenePtr = func(buffer, (uint) buffer.Length, (uint) flags, formatHint, propStore);
+            FixQuaternionsInSceneFromAssimp(scenePtr);
+            return scenePtr;
         }
 
         /// <summary>
@@ -158,7 +162,10 @@ namespace Assimp.Unmanaged
 
             Functions.aiApplyPostProcessing func = GetFunction<Functions.aiApplyPostProcessing>(FunctionNames.aiApplyPostProcessing);
 
-            return func(scene, (uint) flags);
+            FixQuaternionsInSceneToAssimp(scene);
+            var scenePtr = func(scene, (uint) flags);
+            FixQuaternionsInSceneFromAssimp(scenePtr);
+            return scenePtr;
         }
 
         #endregion
@@ -216,7 +223,9 @@ namespace Assimp.Unmanaged
             Functions.aiExportSceneToBlob exportBlobFunc = GetFunction<Functions.aiExportSceneToBlob>(FunctionNames.aiExportSceneToBlob);
             Functions.aiReleaseExportBlob releaseExportBlobFunc = GetFunction<Functions.aiReleaseExportBlob>(FunctionNames.aiReleaseExportBlob);
 
+            FixQuaternionsInSceneToAssimp(scene);
             IntPtr blobPtr = exportBlobFunc(scene, formatId, (uint) preProcessing);
+            FixQuaternionsInSceneFromAssimp(scene);
 
             if(blobPtr == IntPtr.Zero)
                 return null;
@@ -264,7 +273,10 @@ namespace Assimp.Unmanaged
 
             Functions.aiExportSceneEx exportFunc = GetFunction<Functions.aiExportSceneEx>(FunctionNames.aiExportSceneEx);
 
-            return exportFunc(scene, formatId, fileName, fileIO, (uint) preProcessing);
+            FixQuaternionsInSceneToAssimp(scene);
+            var ret = exportFunc(scene, formatId, fileName, fileIO, (uint) preProcessing);
+            FixQuaternionsInSceneFromAssimp(scene);
+            return ret;
         }
 
         /// <summary>
@@ -803,6 +815,7 @@ namespace Assimp.Unmanaged
             Functions.aiCreateQuaternionFromMatrix func = GetFunction<Functions.aiCreateQuaternionFromMatrix>(FunctionNames.aiCreateQuaternionFromMatrix);
 
             func(out quat, ref mat);
+            quat = FixQuaternionFromAssimp(quat);
         }
 
         /// <summary>
@@ -819,6 +832,7 @@ namespace Assimp.Unmanaged
             Functions.aiDecomposeMatrix func = GetFunction<Functions.aiDecomposeMatrix>(FunctionNames.aiDecomposeMatrix);
 
             func(ref mat, out scaling, out rotation, out position);
+            rotation = FixQuaternionFromAssimp(rotation);
         }
 
         /// <summary>
@@ -1379,5 +1393,55 @@ namespace Assimp.Unmanaged
         }
 
         #endregion
+
+        // Assimp's quaternions are WXYZ, C#'s are XYZW, we need to convert all of them.
+        internal static Quaternion FixQuaternionFromAssimp(Quaternion quat) => new(quat.Y, quat.Z, quat.W, quat.X);
+        internal static Quaternion FixQuaternionToAssimp(Quaternion quat) => new(quat.W, quat.X, quat.Y, quat.Z);
+        internal static unsafe void FixQuaternionsInSceneFromAssimp(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero)
+                return;
+
+            var scene = (AiScene*)ptr;
+            if (scene->NumAnimations == 0)
+                return;
+
+            for (uint i = 0; i < scene->NumAnimations; i++)
+            {
+                var anim = ((AiAnimation**)scene->Animations)[i];
+                for (uint j = 0; j < anim->NumChannels; j++)
+                {
+                    var channel = ((AiNodeAnim**)anim->Channels)[j];
+                    for (uint k = 0; k < channel->NumRotationKeys; k++)
+                    {
+                        ref var rotKey = ref ((QuaternionKey*)channel->RotationKeys)[k];
+                        rotKey.Value = FixQuaternionFromAssimp(rotKey.Value);
+                    }
+                }
+            }
+        }
+        internal static unsafe void FixQuaternionsInSceneToAssimp(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero)
+                return;
+
+            var scene = (AiScene*)ptr;
+            if (scene->NumAnimations == 0)
+                return;
+
+            for (uint i = 0; i < scene->NumAnimations; i++)
+            {
+                var anim = ((AiAnimation**)scene->Animations)[i];
+                for (uint j = 0; j < anim->NumChannels; j++)
+                {
+                    var channel = ((AiNodeAnim**)anim->Channels)[j];
+                    for (uint k = 0; k < channel->NumRotationKeys; k++)
+                    {
+                        ref var rotKey = ref ((QuaternionKey*)channel->RotationKeys)[k];
+                        rotKey.Value = FixQuaternionToAssimp(rotKey.Value);
+                    }
+                }
+            }
+        }
     }
 }
