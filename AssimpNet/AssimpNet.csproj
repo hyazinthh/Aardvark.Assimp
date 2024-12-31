@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Nicholas Woodfield, Salvage</Authors>
     <Company />
-    <Version>5.4.3.1</Version>
+    <Version>5.4.3.2</Version>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <Copyright>Copyright © 2012-2020 Nicholas Woodfield, © 2024 Salvage</Copyright>
     <PackageIcon>logo.png</PackageIcon>
@@ -40,7 +40,7 @@
     <Content Include="..\ChangeLog.txt" Link="nuget\ChangeLog.txt" PackagePath="" />
     <Content Include="..\License.txt" Link="nuget\License.txt" PackagePath="" />
     <Content Include="..\Docs\AssimpNet Documentation %28October 2018%29.chm" Link="nuget\AssimpNet Documentation %28October 2018%29.chm" PackagePath="" />
-    <Content Include="..\libs\Assimp\**" Link="nuget\runtimes\%(RecursiveDir)\native\%(Filename)%(Extension)" PackagePath="runtimes\%(RecursiveDir)\native" />
+    <Content Include="..\libs\Assimp\**" Link="nuget\runtimes\%(RecursiveDir)native\%(Filename)%(Extension)" PackagePath="runtimes\%(RecursiveDir)native\%(Filename)%(Extension)" />
     <Content Include="AssimpNetter.targets" Link="nuget\build\AssimpNetter.targets" PackagePath="build" />
   </ItemGroup>
 
