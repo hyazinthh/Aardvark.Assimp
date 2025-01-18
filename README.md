@@ -34,11 +34,13 @@ The NuGet package supports the following Operating Systems and Architectures out
 * **Windows** 
 	* x86, x64 (Tested on Windows 10)
 * **Linux**
-	* x64 (Tested on Ubuntu 24.04 Noble Numbat)
+	* x64, ARM64 (Tested on Ubuntu 24.04 Noble Numbat)
 * **MacOS**
 	* x64 (Tested on MacOS 13.7 Ventura), ARM64 (Tested on MacOS 14.7 Sonoma)
 
 You may have to build and provide your own native binaries for a target platform that is not listed. If the library does not support a platform you are targeting, please let us know or contribute an implementation! The logic to dynamically load the native library is abstracted, so new platform implementations can easily be added.
+
+All included binaries are built transparently using GitHub Actions on [this fork](https://github.com/Saalvage/assimp/).
 
 ## Questions & Contributing ##
 

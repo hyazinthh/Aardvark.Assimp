@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [Windows x64, Windows x86, Linux, MacOS x64, MacOS ARM64]
+        name: [Windows x64, Windows x86, Linux x64, Linux ARM64, MacOS x64, MacOS ARM64]
         configuration: [Release, Debug]
         include:
           - name: Windows x64
@@ -21,8 +21,10 @@ jobs:
           - name: Windows x86
             os: windows-latest
             additional_args: -a x86
-          - name: Linux
-            os: ubuntu-latest
+          - name: Linux x64
+            os: ubuntu-24.04
+          - name: Linux ARM64
+            os: ubuntu-24.04-arm
           - name: MacOS x64
             os: macos-13
           - name: MacOS ARM64
