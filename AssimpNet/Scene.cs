@@ -231,7 +231,7 @@ namespace Assimp
             //Lookup using texture ID (if referenced like: "*1", "*2", etc)
             if (fileName.StartsWith("*"))
             {
-                string indexStr = fileName[1..];
+                string indexStr = fileName.Substring(1);
                 int index;
                 if(!int.TryParse(indexStr, out index) || index < 0 || index >= m_textures.Count)
                     return null;

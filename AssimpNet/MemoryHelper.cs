@@ -613,7 +613,12 @@ namespace Assimp
         /// <param name="count">Number of elements to copy</param>
         public static unsafe void Write<T>(IntPtr pDest, List<T> data, int startIndexInArray, int count) where T : struct
         {
+#if NET8_0_OR_GREATER
             ReadOnlySpan<T> src = CollectionsMarshal.AsSpan(data).Slice(startIndexInArray, count);
+#else
+            var array = data.ToArray();
+            ReadOnlySpan<T> src = array.AsSpan().Slice(startIndexInArray, count);
+#endif
             Span<T> dst = new Span<T>(pDest.ToPointer(), count);
             src.CopyTo(dst);
         }

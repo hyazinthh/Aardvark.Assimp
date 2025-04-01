@@ -23,7 +23,7 @@
 using System;
 using System.Numerics;
 using NUnit.Framework;
-using TK = OpenTK;
+using TK = OpenTK.Mathematics;
 
 namespace Assimp.Test
 {

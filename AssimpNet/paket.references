@@ -1,0 +1,5 @@
+Aardvark.Build
+Aardvark.Base
+System.Memory
+System.Numerics.Vectors
+System.Runtime.CompilerServices.Unsafe

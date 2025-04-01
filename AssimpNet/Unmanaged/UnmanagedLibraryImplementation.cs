@@ -89,7 +89,10 @@ namespace Assimp.Unmanaged
         {
             FreeLibrary(true);
 
-            m_libraryHandle = NativeLoadLibrary(path);
+            m_libraryHandle = Aardvark.Base.Aardvark.LoadLibrary(Assembly.GetExecutingAssembly(), Path.GetFileName(path));
+
+            if (m_libraryHandle == IntPtr.Zero)
+                m_libraryHandle = NativeLoadLibrary(path);
 
             if(m_libraryHandle != IntPtr.Zero)
                 LoadFunctions();

@@ -841,7 +841,7 @@ namespace Assimp
             QueryImporterDescriptionsIfNecessary();
 
             if(fileExtension.StartsWith(".") && fileExtension.Length >= 2)
-                fileExtension = fileExtension[1..];
+                fileExtension = fileExtension.Substring(1);
 
             foreach(ImporterDescription descr in m_importerDescrs)
             {
@@ -878,7 +878,7 @@ namespace Assimp
             QueryExportFormatsIfNecessary();
 
             if(format.StartsWith(".") && format.Length >= 2)
-                format = format[1..];
+                format = format.Substring(1);
 
             foreach(ExportFormatDescription desc in m_exportFormats)
             {

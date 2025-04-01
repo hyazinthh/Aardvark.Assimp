@@ -1,0 +1,11 @@
+type project
+id Aardvark.Data.Assimp
+authors Aardvark Platform Team
+owners Aardvark Platform Team
+projectUrl http://github.com/aardvark-community
+licenseUrl http://www.apache.org/licenses/LICENSE-2.0.txt
+repositoryType git
+repositoryUrl https://github.com/aardvark-community/aardvark.data.assimp
+description
+    Assimp wrapper for the Aardvark Platform based on AssimpNet and AssimpNetter.
+include-pdbs true

@@ -38,6 +38,8 @@ namespace Assimp.Test
         [OneTimeSetUp]
         public void Setup()
         {
+            Aardvark.Base.Aardvark.Init();
+
             string outputPath = Path.Combine(TestHelper.RootPath, "TestFiles/output");
 
             if (!Directory.Exists(outputPath))

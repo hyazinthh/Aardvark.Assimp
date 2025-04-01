@@ -1,0 +1,47 @@
+name: Publish
+on:
+  push:
+    branches:
+      - final
+    paths:
+      - RELEASE_NOTES.md
+      - .github/workflows/publish.yml
+jobs:
+  pack:
+    name: Package
+    runs-on: windows-latest
+    steps:  
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Restore Tools
+        run: dotnet tool restore
+      - name: Restore
+        run: dotnet paket restore
+      - name: Build
+        shell: cmd
+        run: dotnet build -c Release AssimpNet.sln
+      - name: Test
+        run: dotnet test AssimpNet.sln -c Release --no-build --nologo --logger:"console;verbosity=normal"
+      - name: Pack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet aardpack AssimpNet.sln --notag
+      - name: Upload Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: bin\pack
+      - name: GitHub Packages
+        env:
+          NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
+        shell: cmd
+        run: dotnet nuget push "bin\pack\*.nupkg" -k %NUGET_KEY% -s "https://nuget.pkg.github.com/aardvark-community/index.json" --skip-duplicate
+      - name: NuGet
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        shell: cmd
+        run: dotnet nuget push "bin\pack\*.nupkg" -k %NUGET_KEY% -s "https://api.nuget.org/v3/index.json" --skip-duplicate

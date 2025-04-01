@@ -1378,7 +1378,12 @@ namespace Assimp
         /// <returns>The array of textures</returns>
         public IEnumerable<TextureSlot> GetAllMaterialTextures()
         {
+#if NET8_0_OR_GREATER
             return Enum.GetValues<TextureType>().SelectMany(GetMaterialTextures);
+#else
+            var values = (TextureType[])Enum.GetValues(typeof(TextureType));
+            return values.SelectMany(GetMaterialTextures);
+#endif
         }
 
         #region IMarshalable Implementation
