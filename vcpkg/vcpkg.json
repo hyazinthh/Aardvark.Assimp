@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "assimp"
+  ],
+  "overrides": [
+    { "name": "assimp", "version": "5.4.3" }
+  ]
+}
