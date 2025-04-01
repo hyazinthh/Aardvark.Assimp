@@ -1,5 +1,5 @@
 group Tests
-    OpenTK.Mathematics
+    Unofficial.OpenTK
     Microsoft.NET.Test.Sdk
     NUnit
     NUnit3TestAdapter

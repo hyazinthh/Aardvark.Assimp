@@ -1,4 +1,4 @@
-framework: auto-detect
+framework: net8.0, net471
 storage: none
 source https://api.nuget.org/v3/index.json
 
@@ -12,11 +12,11 @@ nuget Aardvark.Base                             ~> 5.3.0
 
 // Tests
 group Tests
-    framework: net8.0
+    framework: net8.0, net471
     storage: none
     source https://api.nuget.org/v3/index.json
 
-    nuget OpenTK.Mathematics                        ~> 4.9.4
+    nuget Unofficial.OpenTK                         ~> 3.0.21
     nuget Microsoft.NET.Test.Sdk                    ~> 17.10.0
     nuget NUnit                                     ~> 4.3.2
     nuget NUnit3TestAdapter                         ~> 5.0.0
