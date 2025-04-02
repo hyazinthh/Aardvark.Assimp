@@ -34,7 +34,6 @@ jobs:
       - name: CMake
         run: cmake --version
       - name: Build
-        continue-on-error: true
         run: |
           export VCPKG_FORCE_SYSTEM_BINARIES=1
             vcpkg install --host-triplet=linux-x64-release
