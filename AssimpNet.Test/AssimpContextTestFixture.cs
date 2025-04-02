@@ -40,7 +40,13 @@ namespace Assimp.Test
         {
             Aardvark.Base.Aardvark.Init();
 
-            string outputPath = Path.Combine(TestHelper.RootPath, "TestFiles/output");
+            string testFilesDir = Path.Combine(TestHelper.RootPath, "TestFiles");
+
+            string sphereFile = Path.Combine(testFilesDir, "sphere.obj");
+            string sphereUnicodeFile = Path.Combine(testFilesDir, "\u00DFphere.obj");
+            File.Copy(sphereFile, sphereUnicodeFile, true);
+
+            string outputPath = Path.Combine(testFilesDir, "output");
 
             if (!Directory.Exists(outputPath))
                 Directory.CreateDirectory(outputPath);
@@ -193,9 +199,10 @@ namespace Assimp.Test
         }
 
         [Test]
-        public void TestImportFromFile()
+        public void TestImportFromFile([Values(false, true)] bool unicode)
         {
-            string path = Path.Combine(TestHelper.RootPath, "TestFiles/sphere.obj");
+            string file = unicode ? "TestFiles/\u00DFphere.obj" : "TestFiles/sphere.obj";
+            string path = Path.Combine(TestHelper.RootPath, file);
 
             AssimpContext importer = new AssimpContext();
 
